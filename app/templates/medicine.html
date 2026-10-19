@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}{{ t('nav_medicine') }} · myElderly{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>{{ t('nav_medicine') }}</h1>
+    <p id="adherenceText">{{ t('medicine_level') }}: –</p>
+  </div>
+</div>
+
+<div class="banner info">{{ t('med_safety') }}</div>
+
+<section class="two-col">
+  <article class="card">
+    <div class="card-head"><h2>{{ t('todays_medicine') }}</h2></div>
+    <ul class="med-list" id="medList"></ul>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><h2>{{ t('add_medicine') }}</h2></div>
+    <form class="form" id="medForm">
+      <label>{{ t('med_name') }}<input name="name" required maxlength="80"></label>
+      <label>{{ t('med_dose') }}<input name="dose" maxlength="60"></label>
+      <label>{{ t('med_times') }}<input name="times" required placeholder="08:00, 20:00"></label>
+      <label>{{ t('med_notes') }}<input name="notes" maxlength="160"></label>
+      <button class="btn primary" type="submit">{{ icon('plus') }}{{ t('save') }}</button>
+    </form>
+  </article>
+</section>
+
+<section class="card">
+  <div class="card-head"><h2>{{ t('all_medicines') }}</h2></div>
+  <ul class="plain-list" id="allMeds"></ul>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/medicine.js') }}"></script>
+{% endblock %}

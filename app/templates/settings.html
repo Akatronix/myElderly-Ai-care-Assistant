@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}{{ t('nav_settings') }} · myElderly{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>{{ t('nav_settings') }}</h1></div>
+</div>
+
+<section class="two-col">
+  <article class="card">
+    <form class="form" id="settingsForm">
+      <label>{{ t('elder_name') }}<input name="elder_name" maxlength="40"></label>
+      <label>{{ t('family_phone') }}<input name="family_phone" inputmode="tel" placeholder="+234..."></label>
+      <label class="check"><input type="checkbox" id="largeText"> {{ t('large_text') }}</label>
+      <button class="btn primary" type="submit">{{ icon('check') }}{{ t('save') }}</button>
+    </form>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><h2>{{ t('language') }}</h2></div>
+    <div class="lang-grid">
+      {% for l in languages %}
+      <a class="lang-card {% if l.code == lang %}active{% endif %}" href="{{ url_for('pages.set_language', code=l.code) }}">
+        <b>{{ l.name }}</b><span>{{ l.short }}</span>
+      </a>
+      {% endfor %}
+    </div>
+    <ul class="plain-list status-list" id="statusList"></ul>
+  </article>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/settings.js') }}"></script>
+{% endblock %}

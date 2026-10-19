@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}{{ t('nav_health') }} · myElderly{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>{{ t('nav_health') }}</h1>
+    <p>{{ t('vitals_now') }}</p>
+  </div>
+  <div class="segmented" id="rangeToggle">
+    <button type="button" data-hours="6">6h</button>
+    <button type="button" class="active" data-hours="24">24h</button>
+    <button type="button" data-hours="168">7d</button>
+  </div>
+</div>
+
+<div class="banner info" id="simBanner" hidden>{{ t('simulated') }}</div>
+
+<section class="stat-grid two">
+  <article class="card stat">
+    <div class="stat-top"><span>{{ t('heartbeat') }}</span>{{ icon('heart-pulse') }}</div>
+    <div class="stat-value"><span id="hrValue">–</span><small>BPM</small></div>
+    <div class="stat-sub" id="hrSub"></div>
+  </article>
+  <article class="card stat">
+    <div class="stat-top"><span>{{ t('body_temp') }}</span>{{ icon('thermometer') }}</div>
+    <div class="stat-value"><span id="tempValue">–</span><small>°C</small></div>
+    <div class="stat-sub" id="tempSub"></div>
+  </article>
+</section>
+
+<section class="card chart-card">
+  <div class="card-head"><h2>{{ t('heartbeat') }}</h2></div>
+  <div class="chart" id="chartHr"></div>
+</section>
+<section class="card chart-card">
+  <div class="card-head"><h2>{{ t('body_temp') }}</h2></div>
+  <div class="chart" id="chartTemp"></div>
+</section>
+
+<section class="card">
+  <div class="card-head"><h2>{{ t('hardware_title') }}</h2></div>
+  <p class="muted">{{ t('hardware_desc') }}</p>
+  <pre class="code">POST {{ request.host_url }}api/vitals
+Content-Type: application/json
+X-Device-Key: &lt;DEVICE_API_KEY, if set in .env&gt;
+
+{"heart_rate": 72, "temperature": 36.8}</pre>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+<script src="{{ url_for('static', filename='js/health.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}{{ t('nav_voice') }} · myElderly{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>{{ t('nav_voice') }}</h1>
+    <p>{{ t('talk_title') }}</p>
+  </div>
+</div>
+
+<section class="voice-layout">
+  <article class="card voice-stage">
+    <button class="orb" id="orb" type="button" data-state="idle" aria-live="polite">
+      <span class="orb-ring"></span><span class="orb-ring r2"></span>
+      <span class="orb-core">{{ icon('mic', 'i-mic') }}{{ icon('square', 'i-stop') }}{{ icon('volume', 'i-vol') }}</span>
+    </button>
+    <div class="voice-status" id="voiceStatus">{{ t('tap_to_talk') }}</div>
+    <p class="muted center">{{ t('voice_hint') }}</p>
+    <div class="banner warn" id="voiceBanner" hidden></div>
+  </article>
+
+  <article class="card chat-card">
+    <div class="chat-log" id="chatLog" aria-live="polite"></div>
+    <form class="chat-form" id="textForm" autocomplete="off">
+      <input type="text" id="textInput" placeholder="{{ t('type_ph') }}" maxlength="500">
+      <button class="btn primary" type="submit">{{ icon('send') }}<span>{{ t('send') }}</span></button>
+    </form>
+  </article>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/voice.js') }}"></script>
+{% endblock %}

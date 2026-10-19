@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}{{ t('nav_alert') }} · myElderly{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>{{ t('nav_alert') }}</h1>
+    <p>{{ t('last_7_days') }}: <b id="alertCount">–</b></p>
+  </div>
+  <div class="page-actions">
+    <button class="btn" id="testAlertBtn" type="button">{{ icon('bell-ring') }}{{ t('send_test_alert') }}</button>
+    <button class="btn" id="callBtn" type="button">{{ icon('phone') }}{{ t('call_family') }}</button>
+  </div>
+</div>
+
+<div class="banner info">{{ t('sms_call_soon') }}</div>
+
+<section class="card">
+  <ul class="alert-list full" id="alertList"></ul>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/alerts.js') }}"></script>
+{% endblock %}

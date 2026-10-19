@@ -1,0 +1,109 @@
+<!doctype html>
+{% from "_icons.html" import icon %}
+<html lang="{{ html_lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}myElderly{% endblock %}</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%2316a34a'/%3E%3Cpath d='M16 24s-7-4.4-7-9.5A4 4 0 0 1 16 12a4 4 0 0 1 7 2.5C23 19.600 16 24 16 24Z' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script>
+    window.I18N = {{ i18n_bundle|tojson }};
+    window.APP = {
+      lang: {{ lang|tojson }},
+      name: {{ elder_name|tojson }},
+      hrRange: {{ hr_range|tojson }},
+      tempRange: {{ temp_range|tojson }}
+    };
+    try { if (localStorage.getItem('largeText') === '1') document.documentElement.classList.add('large-text'); } catch (e) {}
+  </script>
+</head>
+<body data-page="{{ page }}">
+<div class="app" id="app">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <span class="brand-mark">{{ icon('heart-pulse') }}</span>
+      <span class="brand-name">myElderly</span>
+      <button class="icon-btn" id="collapseBtn" type="button" aria-label="Toggle menu">{{ icon('panel-left') }}</button>
+    </div>
+    <nav class="nav">
+      {% for key, endpoint, ic in [
+        ('nav_dashboard','pages.dashboard','activity'),
+        ('nav_voice','pages.voice','mic'),
+        ('nav_medicine','pages.medicine','pill'),
+        ('nav_health','pages.health','heart-pulse'),
+        ('nav_alert','pages.alerts','bell-ring'),
+        ('nav_alarm','pages.alarm','alarm-clock'),
+        ('nav_settings','pages.settings','settings')] %}
+      <a class="nav-link {% if request.endpoint == endpoint %}active{% endif %}" href="{{ url_for(endpoint) }}">
+        {{ icon(ic) }}<span>{{ t(key) }}</span>
+      </a>
+      {% endfor %}
+    </nav>
+    <div class="sidebar-foot">
+      <button class="sos-btn" id="sosBtn" type="button">{{ icon('siren') }}<span>{{ t('sos') }}</span></button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <form class="search" id="askForm" action="{{ url_for('pages.voice') }}" method="get">
+        {{ icon('search') }}
+        <input type="text" name="ask" placeholder="{{ t('search_ph') }}" autocomplete="off" aria-label="{{ t('search_ph') }}">
+      </form>
+      <div class="topbar-right">
+        <span class="status-pill" id="netPill" data-online="0">{{ icon('wifi-off') }}<span id="netText">{{ t('offline') }}</span></span>
+        <span class="clock-pill" id="clock">--:--</span>
+        <button class="icon-btn bordered" id="fullscreenBtn" type="button" title="{{ t('fullscreen') }}">{{ icon('maximize') }}</button>
+        <div class="lang-switch" role="group" aria-label="{{ t('language') }}">
+          {% for l in languages %}
+          <a href="{{ url_for('pages.set_language', code=l.code) }}" class="{% if l.code == lang %}active{% endif %}" title="{{ l.name }}">{{ l.short }}</a>
+          {% endfor %}
+        </div>
+        <div class="user-chip"><span class="avatar">{{ elder_name[:1]|upper }}</span><span class="user-name">{{ elder_name }}</span></div>
+      </div>
+    </header>
+
+    <main class="content">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+
+{% if page != 'voice' %}
+<a class="fab" href="{{ url_for('pages.voice') }}" aria-label="{{ t('talk') }}">{{ icon('mic') }}<span>{{ t('talk') }}</span></a>
+{% endif %}
+
+<!-- Alarm / medicine ringing -->
+<div class="modal" id="ringModal" hidden>
+  <div class="modal-card ring">
+    <div class="ring-icon">{{ icon('alarm-clock') }}</div>
+    <h2 id="ringTitle"></h2>
+    <p id="ringText"></p>
+    <div class="modal-actions">
+      <button class="btn big primary" id="ringDismiss" type="button"></button>
+      <button class="btn big" id="ringSnooze" type="button"></button>
+    </div>
+  </div>
+</div>
+
+<!-- SOS confirm -->
+<div class="modal" id="sosModal" hidden>
+  <div class="modal-card">
+    <div class="ring-icon danger">{{ icon('siren') }}</div>
+    <h2>{{ t('sos') }}</h2>
+    <p>{{ t('sos_confirm') }}</p>
+    <div class="modal-actions">
+      <button class="btn big danger" id="sosYes" type="button">{{ t('yes_send') }}</button>
+      <button class="btn big" id="sosNo" type="button">{{ t('cancel') }}</button>
+    </div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

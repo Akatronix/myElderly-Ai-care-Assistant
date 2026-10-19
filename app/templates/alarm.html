@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}{{ t('nav_alarm') }} · myElderly{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>{{ t('nav_alarm') }}</h1>
+    <p>{{ t('sound_hint') }}</p>
+  </div>
+  <div class="page-actions">
+    <button class="btn" id="testSoundBtn" type="button">{{ icon('volume') }}{{ t('test_sound') }}</button>
+  </div>
+</div>
+
+<section class="two-col">
+  <article class="card">
+    <div class="card-head"><h2>{{ t('nav_alarm') }}</h2></div>
+    <ul class="plain-list" id="alarmList"></ul>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><h2>{{ t('new_alarm') }}</h2></div>
+    <form class="form" id="alarmForm">
+      <label>{{ t('alarm_time') }}<input type="time" name="time" required value="07:00"></label>
+      <label>{{ t('alarm_label') }}<input name="label" maxlength="60"></label>
+      <div class="field">
+        <span class="field-label">{{ t('repeat') }}</span>
+        <div class="chips" id="dayChips"></div>
+      </div>
+      <button class="btn primary" type="submit">{{ icon('plus') }}{{ t('add_alarm') }}</button>
+    </form>
+  </article>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/alarm.js') }}"></script>
+{% endblock %}

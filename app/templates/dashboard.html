@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}{{ t('dashboard_title') }} · myElderly{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>{{ t('dashboard_title') }}</h1>
+    <p>{{ t('dashboard_sub', name=elder_name) }}</p>
+  </div>
+  <div class="page-actions">
+    <button class="btn" id="callBtn" type="button">{{ icon('phone') }}{{ t('call_family') }}</button>
+    <a class="btn primary" href="{{ url_for('pages.voice') }}">{{ icon('mic') }}{{ t('talk') }}</a>
+  </div>
+</div>
+
+<section class="stat-grid">
+  <article class="card stat">
+    <div class="stat-top"><span>{{ t('heartbeat') }}</span>{{ icon('heart-pulse') }}</div>
+    <div class="stat-value"><span id="hrValue">–</span><small>BPM</small></div>
+    <div class="stat-sub" id="hrSub">{{ t('normal') }} · {{ hr_range[0] }}–{{ hr_range[1] }} BPM</div>
+  </article>
+  <article class="card stat">
+    <div class="stat-top"><span>{{ t('body_temp') }}</span>{{ icon('thermometer') }}</div>
+    <div class="stat-value"><span id="tempValue">–</span><small>°C</small></div>
+    <div class="stat-sub" id="tempSub">{{ t('normal') }} · {{ temp_range[0] }}–{{ temp_range[1] }} °C</div>
+  </article>
+  <article class="card stat">
+    <div class="stat-top"><span>{{ t('nav_medicine') }}</span>{{ icon('pill') }}</div>
+    <div class="stat-value"><span id="medValue">–</span></div>
+    <div class="stat-sub" id="medSub">{{ t('medicine_level') }}: –</div>
+  </article>
+  <article class="card stat">
+    <div class="stat-top"><span>{{ t('nav_alert') }}</span>{{ icon('bell-ring') }}</div>
+    <div class="stat-value"><span id="alertValue">–</span></div>
+    <div class="stat-sub">{{ t('last_7_days') }} · SMS · Call</div>
+  </article>
+</section>
+
+<section class="card chart-card">
+  <div class="card-head">
+    <div>
+      <h2>{{ t('health_trends') }}</h2>
+      <p class="muted">{{ t('last_24h') }}</p>
+    </div>
+    <div class="segmented" id="metricToggle">
+      <button type="button" class="active" data-metric="heart_rate">{{ t('heartbeat') }}</button>
+      <button type="button" data-metric="temperature">{{ t('body_temp') }}</button>
+    </div>
+  </div>
+  <div class="chart" id="chart"></div>
+</section>
+
+<section class="two-col">
+  <article class="card">
+    <div class="card-head">
+      <h2>{{ t('todays_medicine') }}</h2>
+      <a class="link" href="{{ url_for('pages.medicine') }}">{{ t('view_all') }}</a>
+    </div>
+    <ul class="med-list" id="medList"></ul>
+  </article>
+  <article class="card">
+    <div class="card-head">
+      <h2>{{ t('recent_alerts') }}</h2>
+      <a class="link" href="{{ url_for('pages.alerts') }}">{{ t('view_all') }}</a>
+    </div>
+    <ul class="alert-list" id="alertList"></ul>
+  </article>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}
